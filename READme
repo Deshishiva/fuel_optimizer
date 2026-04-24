@@ -1,6 +1,6 @@
-# 🚗 Fuel Optimization Route API (Django)
+                        Fuel Optimization Route API (Django)
 
-## 📌 Overview
+##  Overview
 
 This project is a backend API built using Django and Django REST Framework that calculates the optimal route between two locations in the USA and determines the most cost-effective fuel stops along the way.
 
