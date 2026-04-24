@@ -1,0 +1,330 @@
+# 🚗 Fuel Optimization Route API (Django)
+
+## 📌 Overview
+
+This project is a backend API built using Django and Django REST Framework that calculates the optimal route between two locations in the USA and determines the most cost-effective fuel stops along the way.
+
+It integrates a third-party routing API and applies custom optimization logic to minimize fuel cost based on distance and fuel prices.
+
+---
+
+## 🎯 Problem Statement
+
+Given:
+
+* Start location (latitude, longitude)
+* End location (latitude, longitude)
+
+The API will:
+
+* Calculate route between locations
+* Suggest optimal fuel stops (every 500 miles)
+* Select cost-effective stations
+* Calculate total fuel cost (10 mpg)
+
+---
+
+## ⚙️ Tech Stack
+
+* Python 3.11
+* Django 5.x
+* Django REST Framework
+* OpenRouteService API
+* Geopy
+* Python Dotenv
+
+---
+
+## 🏗️ Project Structure
+
+```
+fuel_optimizer/
+│
+├── api/
+│   ├── services/
+│   │   ├── route_service.py
+│   │   ├── fuel_service.py
+│   │
+│   ├── fuel_data.json
+│   ├── fuel_data.py
+│   ├── views.py
+│   ├── urls.py
+│
+├── fuel_optimizer/
+│   ├── settings.py
+│   ├── urls.py
+│
+├── manage.py
+├── .env
+```
+
+---
+
+## 🔑 Environment Setup
+
+Create a `.env` file in root directory:
+
+```
+ORS_API_KEY=your_api_key_here
+```
+
+---
+
+## 📡 API Endpoint
+
+### POST `/api/route/`
+
+---
+
+## 📥 Request Body (JSON)
+
+### 🔹 Format
+
+```json
+{
+  "start": {
+    "lat": <latitude>,
+    "lng": <longitude>
+  },
+  "end": {
+    "lat": <latitude>,
+    "lng": <longitude>
+  }
+}
+```
+
+---
+
+### 🔹 Example
+
+```json
+{
+  "start": {"lat": 40.7128, "lng": -74.0060},
+  "end": {"lat": 34.0522, "lng": -118.2437}
+}
+```
+
+---
+
+### 🔹 Field Explanation
+
+* **start** → Starting location
+* **end** → Destination location
+* **lat** → Latitude (-90 to 90)
+* **lng** → Longitude (-180 to 180)
+
+---
+
+## ⚠️ Important Notes
+
+* Use **POST method**
+* Content-Type: **application/json**
+* Do NOT manually send distance
+* Distance is calculated internally
+
+---
+
+## ❗ Common Errors & Solutions
+
+### 1️⃣ Method Not Allowed (405)
+
+```
+"detail": "Method GET not allowed"
+```
+
+👉 Cause:
+
+* Using browser (GET request)
+
+👉 Fix:
+
+* Use POST in Postman
+
+---
+
+### 2️⃣ Invalid Coordinates Error
+
+```
+Could not find routable point
+```
+
+👉 Cause:
+
+* Wrong latitude/longitude
+
+❌ Example (wrong):
+
+```
+20.7128
+```
+
+✔ Correct:
+
+```
+40.7128
+```
+
+👉 Fix:
+
+* Use valid US coordinates
+
+---
+
+### 3️⃣ API Key Error
+
+```
+API Error: ...
+```
+
+👉 Cause:
+
+* Missing `.env`
+* Invalid API key
+
+👉 Fix:
+
+* Check `.env` file
+* Restart server
+
+---
+
+### 4️⃣ Missing Input Error
+
+```
+"error": "Start and End required"
+```
+
+👉 Cause:
+
+* JSON body missing
+
+---
+
+## 📤 Response Example
+
+```json
+{
+  "distance_miles": 2794.13,
+  "fuel_stops": [
+    {
+      "distance": 500,
+      "station": {
+        "city": "Texas",
+        "price": 3.0
+      }
+    }
+  ],
+  "total_cost": 775.0,
+  "route": "encoded_polyline"
+}
+```
+
+---
+
+## 🧠 Core Logic
+
+### Route Calculation
+
+* Uses OpenRouteService API
+* Returns distance + geometry
+
+---
+
+### Fuel Optimization
+
+* Stops every 500 miles
+* Select nearest + cheapest station
+
+---
+
+### Cost Calculation
+
+* Mileage = 10 mpg
+* Fuel per stop = 50 gallons
+* Total cost = sum of fuel cost
+
+---
+
+## ⚡ Performance Optimization
+
+* Caching used to reduce API calls
+* Faster responses
+
+---
+
+## 🧪 Testing
+
+### ✅ Use Postman
+
+* Method: POST
+* URL: http://127.0.0.1:8000/api/route/
+* Body: JSON
+
+---
+
+## ✔ How to Verify It Works
+
+Check:
+
+* Distance ≈ 2700–3000 miles
+* Multiple fuel stops
+* Total cost > 0
+* Route string present
+
+---
+
+## 🚀 How to Run
+
+```
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py runserver
+```
+
+---
+
+## 🔒 Security
+
+* API keys stored in `.env`
+* Not hardcoded
+
+---
+
+## 💡 Future Improvements
+
+* Real-time fuel price API
+* Map visualization
+* Smarter fuel refill logic
+
+---
+
+## 🎯 Key Highlights
+
+* Real-world backend system
+* External API integration
+* Optimization logic
+* Clean architecture
+
+---
+
+## 🧑‍💻 Author
+
+Shiva Kumar
+
+---
+
+## 📌 Summary
+
+This project demonstrates:
+
+* API development
+* Problem solving
+* Optimization logic
+* Production-level backend design
+
+---
+
+## ⭐ Final Note
+
+This is not a basic CRUD project.
+It reflects real-world backend engineering and optimization skills.
